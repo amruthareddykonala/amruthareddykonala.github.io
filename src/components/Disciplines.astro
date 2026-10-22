@@ -1,0 +1,77 @@
+---
+import { PenTool, Palette, Film, Code2, Archive, ArrowRight, Layers } from 'lucide-react';
+
+const disciplines = [
+  {
+    num: '01', title: 'Narrative and Authorship', Icon: PenTool,
+    subtitle: 'Long-form structural writing, and the narrative architecture underneath a position.',
+    description: 'A 4,614-page, 1.74-million-word treatment of marketing as an architectural discipline written over eight years, alongside researched historical non-fiction, a co-authored work with a former Union Cabinet Minister, and three original IP universes. A position that cannot be told as a coherent story is a position that has not been settled.',
+    instruments: ['Long-form Authorship', 'Historical Non-Fiction', 'Original IP & Lore', 'Campaign Narrative', 'Heritage Provenance'],
+  },
+  {
+    num: '02', title: 'Design and Brand Systems', Icon: Palette,
+    subtitle: 'Identity, typographic and editorial systems built as systems, not as disposable artefacts.',
+    description: 'Visual identity, mark and typographic systems, editorial layout, and the presentation layer of a brand, designed so the rules survive the designer. Heritage and legacy work carries an additional constraint: the system must look as though it was always there.',
+    instruments: ['Identity Systems', 'Typographic Systems', 'Editorial & Print Design', 'Heraldic & Noble Insignia', 'Design Tokens'],
+  },
+  {
+    num: '03', title: '2D and 3D Animation', Icon: Film,
+    subtitle: 'Character rigging, deformation and motion built to production rigs rather than one-off files.',
+    description: '2D character animation and rigging in Toon Boom Harmony (deformers, cut-out rigs, master controllers) and 3D work in Blender, including node-based procedural rigging. Motion is treated as a manufacturing problem: a rig that only its author can operate has not been finished.',
+    instruments: ['Toon Boom Harmony Rigs', 'Blender 3D Modeling', 'Master Controllers', 'Cut-Out Deformation', 'Storyboard to Final Film'],
+  },
+  {
+    num: '04', title: 'Software and Automation', Icon: Code2,
+    subtitle: 'Working software, including the tools the advisory work runs on.',
+    description: 'Applications, automation pipelines and command-line tooling built in Python, JavaScript/TypeScript, Flutter, Firebase and C. She is now building a workflow application that turns the nine questions of Structural Marketing into a step-by-step operating process for client teams.',
+    instruments: ['Structural Marketing Workflow App (in development)', 'Python & CLI Tooling', 'TypeScript & React', 'Flutter Mobile Apps', 'Firebase Backend'],
+  },
+  {
+    num: '05', title: 'Archival and Historical Research', Icon: Archive,
+    subtitle: 'Primary-source research, and the reconstruction of records that were never properly kept.',
+    description: 'Historical and archival research for heritage clients and for the public record: 259 articles and more than 2,500 edits on Wikipedia, placing her among the top 3,300 contributors worldwide, chiefly on historical and archival subjects. Legacy brand work depends on it: a lineage claim is only as strong as the primary source it can be traced to.',
+    instruments: ['Primary Colonial Archives', 'Palm-Leaf Court Records', 'Public Record Restoration', 'Wikipedia Contributor', 'Dynastic Provenance'],
+  },
+];
+---
+<section class="py-20 border-b border-stone-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+      <div class="space-y-3 max-w-2xl">
+        <p class="inline-flex items-center gap-2 text-[10px] text-stone-400 uppercase tracking-[0.3em]"><Layers className="w-3.5 h-3.5" />The practice</p>
+        <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight">
+          One practitioner. <span class="italic">Five disciplines</span>. One unbroken architecture.
+        </h2>
+        <p class="font-serif text-base sm:text-lg text-stone-600 leading-relaxed">
+          Most of the marketing industry is organised around the gap between strategy and execution: one agency decides the position, another writes it, another designs it, another animates it, another codes it, and the architecture leaks at every handover.
+        </p>
+      </div>
+      <a href="/about/" class="self-start md:self-end px-5 py-3 text-xs font-semibold uppercase tracking-widest text-stone-800 bg-white border border-stone-300 hover:border-black flex items-center gap-2 shadow-sm">
+        <span>Full biography</span><ArrowRight className="w-3.5 h-3.5" />
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {disciplines.map((d, i) => (
+        <div class:list={[i === 0 || i === 3 ? 'lg:col-span-7' : 'lg:col-span-5', 'p-8 bg-white border border-stone-200 hover:border-black transition-all group flex flex-col justify-between shadow-sm']}>
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <span class="w-10 h-10 border border-stone-200 bg-stone-50 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all"><d.Icon className="w-5 h-5" /></span>
+                <h3 class="font-serif text-2xl">{d.title}</h3>
+              </div>
+              <span class="font-mono text-xs font-bold text-stone-400">{d.num}</span>
+            </div>
+            <p class="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-3">{d.subtitle}</p>
+            <p class="font-serif text-sm sm:text-base text-stone-600 leading-relaxed mb-6">{d.description}</p>
+          </div>
+          <div class="pt-4 border-t border-stone-100">
+            <ul class="flex flex-wrap gap-1.5">
+              {d.instruments.map((x) => <li class="text-[11px] px-2.5 py-1 bg-stone-50 border border-stone-200 text-stone-700">{x}</li>)}
+            </ul>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

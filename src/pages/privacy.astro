@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+const updated = '22 October 2026';
+---
+<Base title="Privacy" description={`How the ${SITE.name} website handles personal data.`}>
+  <article class="py-16 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto space-y-6 font-serif text-lg text-stone-700 leading-relaxed">
+    <p class="font-sans text-xs uppercase tracking-widest text-stone-500">Privacy</p>
+    <h1 class="text-3xl sm:text-4xl font-light text-[#1A1A1A]">What this site collects, and why</h1>
+    <p class="text-sm font-sans text-stone-500">Last updated {updated}</p>
+    <h2 class="text-2xl text-[#1A1A1A] pt-4">Who is responsible</h2>
+    <p>{SITE.name}, contactable at <a href={`mailto:${SITE.email}`} class="underline">{SITE.email}</a>.</p>
+    <h2 class="text-2xl text-[#1A1A1A] pt-4">Enquiry and book request forms</h2>
+    <p>When you send a form, your name, email and message are delivered to the email address above through Web3Forms, a form-delivery service. They are used only to reply to you and are not added to any mailing list.</p>
+    <h2 class="text-2xl text-[#1A1A1A] pt-4">Newsletter</h2>
+    <p>If you subscribe, your email address is held by the newsletter provider and used only to send the newsletter. Sign-up uses double opt-in, and every issue has an unsubscribe link.</p>
+    <h2 class="text-2xl text-[#1A1A1A] pt-4">Analytics and cookies</h2>
+    <p>This site sets no advertising cookies. If visit statistics are added, they will be cookieless and aggregate, and this page will name the service.</p>
+    <h2 class="text-2xl text-[#1A1A1A] pt-4">Your rights</h2>
+    <p>You can ask to see, correct or delete what has been kept about you by writing to the email above. Requests are answered within 30 days.</p>
+  </article>
+</Base>

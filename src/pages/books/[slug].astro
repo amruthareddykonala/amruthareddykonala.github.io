@@ -1,0 +1,68 @@
+---
+import Base from '../../layouts/Base.astro';
+import EnquiryForm from '../../components/EnquiryForm.astro';
+import { BOOKS_DATA } from '../../data/books';
+import { SITE } from '../../data/site';
+import type { Book } from '../../data/types';
+import { CheckCircle2, ArrowLeft } from 'lucide-react';
+
+export function getStaticPaths() {
+  return BOOKS_DATA.map((book) => ({ params: { slug: book.id }, props: { book } }));
+}
+const { book } = Astro.props as { book: Book };
+const idx = BOOKS_DATA.findIndex((b) => b.id === book.id);
+const prev = BOOKS_DATA[idx - 1];
+const next = BOOKS_DATA[idx + 1];
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Book',
+  name: book.title,
+  alternativeHeadline: book.subtitle,
+  author: { '@id': `${SITE.url}/#person` },
+  numberOfPages: book.pages,
+  bookEdition: book.edition,
+  datePublished: book.year,
+  description: book.summary,
+  isPartOf: { '@type': 'BookSeries', name: 'Structural Marketing: The 10 Volumes', url: `${SITE.url}/structural-marketing/` },
+};
+---
+<Base title={book.title} description={`${book.title}: ${book.subtitle}. ${book.summary}`} schema={[schema]} ogType="book">
+  <article class="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+    <a href="/structural-marketing/#books" class="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-stone-500 hover:text-black mb-8"><ArrowLeft className="w-3.5 h-3.5" />All ten volumes</a>
+    <header class="border-b border-stone-200 pb-8 mb-8 space-y-2">
+      <p class="text-xs uppercase tracking-widest text-stone-400">{book.edition} • {book.pages} pages{book.words ? ` • ${book.words}` : ''}</p>
+      <h1 class="font-serif text-4xl sm:text-5xl font-light tracking-tight">{book.title}</h1>
+      <p class="font-serif text-xl text-stone-600 italic">{book.subtitle}</p>
+      <p class="text-sm text-stone-500">By {SITE.name}</p>
+    </header>
+
+    <blockquote class="p-6 bg-stone-50 border-l-2 border-stone-800 italic text-lg font-serif leading-relaxed mb-8">"{book.sampleQuote}"</blockquote>
+
+    <div class="space-y-4 font-serif text-lg text-stone-700 leading-relaxed mb-10">
+      {book.description.map((p) => <p>{p}</p>)}
+    </div>
+
+    <section class="mb-10">
+      <h2 class="text-xs uppercase tracking-widest text-stone-500 font-semibold mb-3">What the volume covers</h2>
+      <ul class="space-y-2 font-serif text-stone-700">
+        {book.keyHighlights.map((h) => <li class="flex items-start gap-2.5"><CheckCircle2 className="w-4 h-4 mt-1 flex-shrink-0" /><span>{h}</span></li>)}
+      </ul>
+    </section>
+
+    <section class="p-6 bg-stone-50 border border-stone-200 mb-12">
+      <h2 class="text-[10px] uppercase tracking-widest text-stone-500 font-semibold mb-2">Excerpt</h2>
+      <p class="font-serif text-base text-stone-700 leading-relaxed whitespace-pre-line italic">{book.sampleExcerpt}</p>
+    </section>
+
+    <section id="request" class="p-8 bg-white border border-stone-200 shadow-sm scroll-mt-28">
+      <h2 class="font-serif text-2xl sm:text-3xl font-light mb-1">Request details</h2>
+      <p class="text-sm text-stone-500 mb-6">Formats, price and delivery for this volume or the full set are sent by email.</p>
+      <EnquiryForm kind="book" subject={`Book request: ${book.title}`} bookTitle={book.title} />
+    </section>
+
+    <nav aria-label="Other volumes" class="mt-12 pt-6 border-t border-stone-200 flex justify-between gap-4 text-sm font-serif">
+      {prev ? <a href={`/books/${prev.id}/`} class="hover:underline">← {prev.title.replace('Structural Marketing: ', '')}</a> : <span></span>}
+      {next ? <a href={`/books/${next.id}/`} class="hover:underline text-right">{next.title.replace('Structural Marketing: ', '')} →</a> : <span></span>}
+    </nav>
+  </article>
+</Base>

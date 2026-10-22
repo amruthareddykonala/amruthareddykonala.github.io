@@ -1,0 +1,103 @@
+---
+// Plain HTML form posted to Web3Forms (free; delivers each submission to SITE.email).
+// While SITE.web3formsKey is empty, an email link is shown instead, so no enquiry is lost.
+import { SITE } from '../data/site';
+import { Send, Mail } from 'lucide-react';
+
+interface Props {
+  subject: string;
+  /** 'contact' = advisory enquiry; 'book' = book details request */
+  kind: 'contact' | 'book';
+  bookTitle?: string;
+}
+const { subject, kind, bookTitle } = Astro.props;
+const thanks = new URL('/thanks/', SITE.url).href;
+const mailBody = encodeURIComponent(kind === 'book' ? `I would like details for ${bookTitle} (edition, price, delivery).\n\nName:\nCountry:\n` : 'Name:\nOrganisation:\nWhat I need help with:\n');
+const input = 'w-full px-3.5 py-2.5 bg-stone-50 border border-stone-200 text-sm text-stone-900 focus:outline-none focus:border-black';
+const label = 'text-xs text-stone-500 uppercase tracking-wider font-semibold block mb-1';
+---
+{SITE.web3formsKey ? (
+  <form action="https://api.web3forms.com/submit" method="POST" class="space-y-5 font-sans">
+    <input type="hidden" name="access_key" value={SITE.web3formsKey} />
+    <input type="hidden" name="subject" value={subject} />
+    <input type="hidden" name="from_name" value={`${SITE.name} website`} />
+    <input type="hidden" name="redirect" value={thanks} />
+    {bookTitle && <input type="hidden" name="book" value={bookTitle} />}
+    <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label for={`${kind}-name`} class={label}>Full name *</label>
+        <input id={`${kind}-name`} name="name" type="text" required autocomplete="name" class={input} />
+      </div>
+      <div>
+        <label for={`${kind}-email`} class={label}>Email *</label>
+        <input id={`${kind}-email`} name="email" type="email" required autocomplete="email" class={input} />
+      </div>
+    </div>
+
+    {kind === 'contact' ? (
+      <>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="contact-org" class={label}>Organisation</label>
+            <input id="contact-org" name="organisation" type="text" autocomplete="organization" class={input} />
+          </div>
+          <div>
+            <label for="contact-type" class={label}>Type of work</label>
+            <select id="contact-type" name="engagement" class={input}>
+              <option>Fractional CMO</option>
+              <option>Strategic advisory</option>
+              <option>Marketing system review</option>
+              <option>Heritage, estate or family brand</option>
+              <option>Speaking or workshop</option>
+              <option>Books or publishing</option>
+              <option>Something else</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label for="contact-msg" class={label}>What is happening, and what do you need? *</label>
+          <textarea id="contact-msg" name="message" rows="6" required class={`${input} font-serif`}></textarea>
+        </div>
+      </>
+    ) : (
+      <>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="book-format" class={label}>Format</label>
+            <select id="book-format" name="format" class={input}>
+              <option>Hardcover</option>
+              <option>Ebook</option>
+              <option>Full 10-volume set</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+          <div>
+            <label for="book-country" class={label}>Country (for delivery)</label>
+            <input id="book-country" name="country" type="text" autocomplete="country-name" class={input} />
+          </div>
+        </div>
+        <div>
+          <label for="book-msg" class={label}>Anything else (quantity, institution, questions)</label>
+          <textarea id="book-msg" name="message" rows="3" class={`${input} font-serif`}></textarea>
+        </div>
+      </>
+    )}
+
+    <p class="text-xs text-stone-500 leading-relaxed">
+      Your details are used only to reply to this request. See the <a href="/privacy/" class="underline">privacy note</a>.
+    </p>
+    <button type="submit" class="w-full py-3.5 text-xs font-semibold uppercase tracking-widest text-white bg-black hover:bg-stone-800 flex items-center justify-center gap-2">
+      <Send className="w-4 h-4" /><span>{kind === 'book' ? 'Request details' : 'Send enquiry'}</span>
+    </button>
+  </form>
+) : (
+  <div class="p-6 bg-stone-50 border border-stone-200 space-y-3 font-sans">
+    <p class="font-serif text-lg">{kind === 'book' ? 'Request details by email' : 'Write directly'}</p>
+    <p class="text-sm text-stone-600">Email works best for now. Every message is read personally.</p>
+    <a href={`mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${mailBody}`} class="inline-flex items-center gap-2 px-6 py-3 text-xs font-semibold uppercase tracking-widest text-white bg-black hover:bg-stone-800">
+      <Mail className="w-4 h-4" /><span>{SITE.email}</span>
+    </a>
+  </div>
+)}

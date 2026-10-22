@@ -1,0 +1,53 @@
+---
+import { Image } from 'astro:assets';
+import avatar from '../assets/avatar.png';
+import { SITE } from '../data/site';
+import { Menu } from 'lucide-react';
+
+const items = [
+  { href: '/', label: 'Home' },
+  { href: '/about/', label: 'About' },
+  { href: '/works/', label: 'Works' },
+  { href: '/structural-marketing/', label: 'Structural Marketing' },
+  { href: '/contact/', label: 'Contact' },
+];
+const path = Astro.url.pathname.replace(/\/?$/, '/');
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href) || (href === '/structural-marketing/' && path.startsWith('/books/')));
+---
+<header class="sticky top-0 z-40 bg-[#FDFCFB]/95 backdrop-blur border-b border-stone-200 font-sans">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-6">
+    <a href="/" class="flex items-center gap-3 group" aria-label={`${SITE.name}, home`}>
+      <Image src={avatar} alt="" width={84} height={84} class="w-[42px] h-[42px] object-cover border border-stone-300" loading="eager" />
+      <span class="leading-tight">
+        <span class="block font-serif text-lg text-[#1A1A1A] tracking-wide group-hover:underline underline-offset-4">{SITE.name}</span>
+        <span class="block text-[10px] uppercase tracking-[0.2em] text-stone-500">{SITE.roleLine}</span>
+      </span>
+    </a>
+
+    <nav aria-label="Main" class="hidden lg:flex items-center gap-1">
+      {items.map((it) => (
+        <a
+          href={it.href}
+          aria-current={isActive(it.href) ? 'page' : undefined}
+          class:list={[
+            'px-3 py-2 text-xs uppercase tracking-widest transition-colors',
+            isActive(it.href) ? 'text-black font-semibold border-b border-black' : 'text-stone-600 hover:text-black',
+          ]}
+        >{it.label}</a>
+      ))}
+      <a href="/contact/" class="ml-3 px-5 py-2.5 text-xs font-semibold uppercase tracking-widest text-white bg-black hover:bg-stone-800 transition-all">Work with me</a>
+    </nav>
+
+    <details class="lg:hidden relative">
+      <summary class="list-none cursor-pointer p-2 border border-stone-300 bg-white" aria-label="Open menu">
+        <Menu className="w-5 h-5" />
+      </summary>
+      <nav aria-label="Mobile" class="absolute right-0 mt-2 w-64 bg-white border border-stone-200 shadow-lg p-2 flex flex-col">
+        {items.map((it) => (
+          <a href={it.href} aria-current={isActive(it.href) ? 'page' : undefined}
+            class:list={['px-4 py-3 text-xs uppercase tracking-widest', isActive(it.href) ? 'bg-stone-100 text-black font-semibold' : 'text-stone-700 hover:bg-stone-50']}>{it.label}</a>
+        ))}
+      </nav>
+    </details>
+  </div>
+</header>

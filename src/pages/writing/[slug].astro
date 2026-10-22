@@ -1,0 +1,48 @@
+---
+import Base from '../../layouts/Base.astro';
+import { BLOG_POSTS } from '../../data/essays';
+import { SITE } from '../../data/site';
+import type { BlogPost } from '../../data/types';
+import { CheckCircle2, ArrowLeft } from 'lucide-react';
+
+export function getStaticPaths() {
+  return BLOG_POSTS.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+const { post } = Astro.props as { post: BlogPost };
+const iso = new Date(post.publishedDate).toISOString().slice(0, 10);
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.title,
+  description: post.summary,
+  datePublished: iso,
+  author: { '@id': `${SITE.url}/#person` },
+  publisher: { '@id': `${SITE.url}/#person` },
+  mainEntityOfPage: `${SITE.url}/writing/${post.slug}/`,
+};
+---
+<Base title={post.title} description={post.summary} schema={[schema]} ogType="article">
+  <article class="py-12 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
+    <a href="/writing/" class="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-stone-500 hover:text-black mb-8"><ArrowLeft className="w-3.5 h-3.5" />All essays</a>
+    <header class="border-b border-stone-200 pb-6 mb-8 space-y-2">
+      <p class="text-xs uppercase tracking-widest text-stone-400">{post.category} • <time datetime={iso}>{post.publishedDate}</time> • {post.readingTime}</p>
+      <h1 class="font-serif text-4xl sm:text-5xl font-light leading-tight">{post.title}</h1>
+      <p class="font-serif text-xl text-stone-600 italic">{post.subtitle}</p>
+      <p class="text-sm text-stone-500">By <a href="/about/" class="underline">{SITE.name}</a></p>
+    </header>
+    <blockquote class="p-6 bg-stone-50 border-l-2 border-stone-900 italic text-lg font-serif leading-relaxed mb-8">"{post.featuredQuote}"</blockquote>
+    <div class="space-y-5 font-serif text-lg text-stone-800 leading-relaxed">
+      {post.content.map((p) => <p>{p}</p>)}
+    </div>
+    <section class="mt-10 p-6 bg-stone-50 border border-stone-200">
+      <h2 class="text-xs uppercase tracking-widest text-stone-500 font-semibold mb-3">Key takeaways</h2>
+      <ul class="space-y-2 font-serif text-stone-700">
+        {post.keyTakeaways.map((t) => <li class="flex items-start gap-2.5"><CheckCircle2 className="w-4 h-4 mt-1 flex-shrink-0" /><span>{t}</span></li>)}
+      </ul>
+    </section>
+    <div class="mt-12 pt-6 border-t border-stone-200 flex flex-wrap items-center justify-between gap-4">
+      <a href="/contact/" class="px-6 py-3 text-xs font-semibold uppercase tracking-widest text-white bg-black hover:bg-stone-800">Discuss this with the author</a>
+      <a href="/newsletter/" class="text-xs uppercase tracking-widest border-b border-stone-400 pb-1 hover:border-black">Get new essays by email</a>
+    </div>
+  </article>
+</Base>

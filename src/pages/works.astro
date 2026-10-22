@@ -1,0 +1,81 @@
+---
+import Base from '../layouts/Base.astro';
+import { MANDATES_DATA } from '../data/works';
+import { SITE } from '../data/site';
+import { Lock, MapPin, TrendingUp, ChevronDown } from 'lucide-react';
+
+const categories = [...new Set(MANDATES_DATA.map((m) => m.category))];
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+---
+<Base title="Previous work" description={`Previous work by ${SITE.name}: heritage and royal houses, real estate estates, political campaigns, family holdings, ventures and original IP, with documented outcomes.`}>
+  <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="border-b border-stone-200 pb-10 mb-10">
+      <p class="text-xs uppercase tracking-widest text-stone-500 mb-3">Case studies</p>
+      <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-light tracking-tight">Previous work and outcomes</h1>
+      <p class="font-serif text-xl sm:text-2xl text-stone-600 mt-3 max-w-3xl leading-relaxed italic">
+        Much of the work has been done for principals whose names are the asset, which is why some are not named here. What can be published is the contribution: what was built, and what it produced.
+      </p>
+    </div>
+
+    <nav aria-label="Categories" class="flex items-center gap-2 overflow-x-auto pb-4 mb-10">
+      {categories.map((c) => (
+        <a href={`#${slug(c)}`} class="px-4 py-2 text-xs font-medium whitespace-nowrap bg-white text-stone-600 border border-stone-200 hover:border-black hover:text-black">{c}</a>
+      ))}
+    </nav>
+
+    {categories.map((c) => (
+      <section id={slug(c)} class="mb-16 scroll-mt-28">
+        <h2 class="font-serif text-2xl sm:text-3xl font-light pb-2 mb-8 border-b border-stone-200">{c}</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {MANDATES_DATA.filter((m) => m.category === c).map((item) => (
+            <article id={item.id} class="bg-white border border-stone-200 p-8 hover:border-black transition-all flex flex-col justify-between shadow-sm scroll-mt-28">
+              <div class="space-y-4">
+                <div>
+                  {item.isConfidential && (
+                    <span class="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 mb-2 bg-stone-50 text-stone-500 border border-stone-200"><Lock className="w-2.5 h-2.5" />Confidential client</span>
+                  )}
+                  <h3 class="font-serif text-2xl">{item.client}</h3>
+                  <p class="flex items-center gap-1.5 text-xs text-stone-500 mt-1"><MapPin className="w-3.5 h-3.5" /><span>{item.location}</span><span>•</span><span class="font-mono">{item.year}</span></p>
+                </div>
+                <p class="font-serif text-sm sm:text-base text-stone-600 leading-relaxed">{item.contribution}</p>
+                <div class="p-4 bg-stone-50 border border-stone-200 space-y-1 font-serif">
+                  <span class="text-[10px] font-sans text-stone-500 font-semibold uppercase tracking-wider flex items-center gap-1.5"><TrendingUp className="w-3.5 h-3.5" />Outcome</span>
+                  <p class="text-xs sm:text-sm text-stone-800 font-medium leading-relaxed">{item.outcome}</p>
+                </div>
+                {item.metrics && item.metrics.length > 0 && (
+                  <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-2">
+                    {item.metrics.map((m) => (
+                      <div class="p-3 bg-white border border-stone-200 text-center">
+                        {m.value && <span class="font-serif text-xl font-light block leading-tight">{m.value}</span>}
+                        <span class="text-[10px] text-stone-500 block mt-0.5 leading-tight">{m.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {(item.fullNarrative || item.quote) && (
+                  <details class="group border-t border-stone-100 pt-4">
+                    <summary class="list-none cursor-pointer text-xs font-semibold uppercase tracking-wider flex items-center gap-1 hover:text-stone-600">
+                      <span>Read details</span><ChevronDown className="w-3.5 h-3.5 group-open:rotate-180 transition-transform" />
+                    </summary>
+                    <div class="pt-4 space-y-3 font-serif text-base text-stone-700 leading-relaxed">
+                      {item.fullNarrative?.split('\n\n').map((p) => <p>{p}</p>)}
+                      {item.quote && <blockquote class="border-l-2 border-stone-800 pl-4 italic text-sm">"{item.quote}"</blockquote>}
+                    </div>
+                  </details>
+                )}
+              </div>
+              <div class="pt-6 mt-6 border-t border-stone-100 flex flex-wrap gap-1.5">
+                {item.disciplinesUsed.map((d) => <span class="text-[10px] px-2 py-0.5 bg-stone-50 border border-stone-200 text-stone-600">{d}</span>)}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <div class="p-8 bg-stone-50 border border-stone-200 flex flex-col md:flex-row items-center justify-between gap-6">
+      <p class="font-serif text-xl">Facing a similar problem?</p>
+      <a href="/contact/" class="px-6 py-3 text-xs font-semibold uppercase tracking-widest text-white bg-black hover:bg-stone-800">Discuss your situation</a>
+    </div>
+  </div>
+</Base>

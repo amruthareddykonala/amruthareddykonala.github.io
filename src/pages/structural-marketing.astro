@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import { BOOKS_DATA } from '../data/books';
+import { SITE, PILLARS } from '../data/site';
+import { ArrowRight, BookOpen, Cpu } from 'lucide-react';
+
+const series = {
+  '@context': 'https://schema.org',
+  '@type': 'BookSeries',
+  name: 'Structural Marketing: The 10 Volumes',
+  author: { '@id': `${SITE.url}/#person` },
+  numberOfPages: 4614,
+  hasPart: BOOKS_DATA.map((b) => ({ '@type': 'Book', name: b.title, url: `${SITE.url}/books/${b.id}/` })),
+};
+---
+<Base title="Structural Marketing" description="Structural Marketing: nine questions, from competition to measurement, answered as one system. The 10-volume work by Amrutha Reddy Konala, and the workflow application in development." schema={[series]}>
+  <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="border-b border-stone-200 pb-10 mb-12">
+      <p class="flex items-center gap-2 text-xs uppercase tracking-widest text-stone-500 mb-3"><BookOpen className="w-3.5 h-3.5 text-[#8C7A6B]" />10 volumes • 4,614 pages • 1.74 million words</p>
+      <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-light tracking-tight">Structural Marketing</h1>
+      <p class="font-serif text-xl sm:text-2xl text-stone-600 mt-3 max-w-3xl leading-relaxed italic">
+        Most marketing problems are not creative problems. They are structural ones: a position, a price or a channel that was never designed to carry the load put on it.
+      </p>
+    </div>
+
+    <section class="mb-20" aria-labelledby="nine">
+      <h2 id="nine" class="font-serif text-3xl sm:text-4xl font-light mb-3">Nine questions, one system</h2>
+      <p class="font-serif text-lg text-stone-600 max-w-3xl mb-8">Structural Marketing answers nine questions in order, and checks every answer against the others. A weak answer anywhere shows up as a cost somewhere else.</p>
+      <ol class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {PILLARS.map((p, i) => (
+          <li class="p-6 bg-white border border-stone-200 shadow-sm">
+            <span class="font-mono text-[11px] text-stone-400">{String(i + 1).padStart(2, '0')}</span>
+            <p class="font-semibold tracking-widest text-sm mt-1">{p.name}</p>
+            <p class="font-serif text-stone-600 mt-1">{p.q}</p>
+          </li>
+        ))}
+      </ol>
+      <p class="text-sm text-stone-500 mt-4">The tenth volume, THE SYSTEMS, shows how the nine fit together.</p>
+    </section>
+
+    <section class="mb-20" aria-labelledby="books">
+      <h2 id="books" class="font-serif text-3xl sm:text-4xl font-light mb-8">The ten volumes</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {BOOKS_DATA.map((book) => (
+          <article class="p-7 sm:p-8 bg-white border border-stone-200 hover:border-stone-400 transition-all flex flex-col justify-between shadow-sm">
+            <div>
+              <div class="h-48 p-5 mb-6 flex flex-col justify-between border border-stone-800 bg-[#1A1A1A] text-white relative overflow-hidden">
+                <div class="absolute right-0 top-0 bottom-0 w-3 bg-stone-800 border-l border-stone-700"></div>
+                <div>
+                  <span class="text-[10px] font-mono uppercase tracking-widest text-[#D1C7BD] block mb-1">{book.badge} • {book.year}</span>
+                  <p class="font-serif text-lg sm:text-xl leading-tight">{book.title}</p>
+                </div>
+                <div class="flex items-end justify-between text-[11px] font-mono text-stone-300">
+                  <span><span class="block text-stone-400 text-[9px] uppercase tracking-wider font-sans">Author</span><span class="text-white font-sans font-medium">{SITE.name}</span></span>
+                  <span class="px-2 py-0.5 bg-stone-800 border border-stone-700 text-stone-200 font-semibold">{book.pages} p.</span>
+                </div>
+              </div>
+              <h3 class="font-serif text-xl sm:text-2xl leading-snug"><a href={`/books/${book.id}/`} class="hover:underline underline-offset-4">{book.title}</a></h3>
+              <p class="text-xs text-stone-700 font-medium italic mt-1">{book.subtitle}</p>
+              <p class="text-sm text-stone-600 leading-relaxed line-clamp-3 pt-2 font-serif">{book.summary}</p>
+            </div>
+            <div class="pt-5 mt-5 border-t border-stone-100 grid grid-cols-2 gap-2">
+              <a href={`/books/${book.id}/`} class="py-2.5 px-3 text-xs font-semibold text-stone-700 bg-stone-50 hover:bg-stone-100 border border-stone-200 text-center">Read excerpt</a>
+              <a href={`/books/${book.id}/#request`} class="py-2.5 px-3 text-xs font-semibold uppercase tracking-widest text-white bg-black hover:bg-stone-800 text-center">Request details</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="p-8 sm:p-10 bg-stone-900 text-stone-200" aria-labelledby="workflow">
+      <p class="inline-flex items-center gap-1.5 px-3 py-1 bg-stone-800 text-stone-100 text-xs font-semibold uppercase tracking-widest mb-4"><Cpu className="w-3.5 h-3.5" />In development</p>
+      <h2 id="workflow" class="font-serif text-3xl text-white mb-3">The Structural Marketing workflow application</h2>
+      <p class="font-serif text-lg text-stone-300 max-w-3xl leading-relaxed">
+        {SITE.name} is building a software application that turns the nine questions into a step-by-step operating workflow for client teams, so the strategy decided in the boardroom is the strategy that reaches the customer. More here when it is ready.
+      </p>
+      <a href="/newsletter/" class="mt-6 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-white border-b border-stone-500 pb-1 hover:border-white">Get updates<ArrowRight className="w-3.5 h-3.5" /></a>
+    </section>
+  </div>
+</Base>

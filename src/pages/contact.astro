@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import { SITE } from '../data/site';
+import { Mail, Clock, Globe, CalendarDays } from 'lucide-react';
+const base = SITE.city ? `Remote and on-site, India and worldwide; based in ${SITE.city}.` : 'Remote and on-site, India and worldwide.';
+---
+<Base title="Contact" description={`Contact ${SITE.name} for fractional CMO work, strategic advisory, heritage and family brand work, speaking, or the Structural Marketing books.`}>
+  <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="border-b border-stone-200 pb-10 mb-10">
+      <p class="text-xs uppercase tracking-widest text-stone-500 mb-3">Contact</p>
+      <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-light tracking-tight">Work with me</h1>
+      <p class="font-serif text-xl sm:text-2xl text-stone-600 mt-3 max-w-3xl leading-relaxed italic">Fractional CMO work, strategic advisory, heritage and family brands, speaking, and the books.</p>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <div class="lg:col-span-7">
+        <div class="p-8 sm:p-10 bg-white border border-stone-200 shadow-sm">
+          <h2 class="font-serif text-2xl font-light mb-1">Send an enquiry</h2>
+          <p class="text-xs text-stone-500 mb-6">Read and answered personally, usually within two working days.</p>
+          <EnquiryForm kind="contact" subject="Website enquiry" />
+        </div>
+      </div>
+      <aside class="lg:col-span-5 space-y-6">
+        <div class="p-8 bg-white border border-stone-200 space-y-5 shadow-sm text-sm">
+          <p class="font-serif text-2xl">{SITE.name}</p>
+          <p class="flex items-start gap-3"><Mail className="w-4 h-4 mt-0.5 flex-shrink-0" /><a href={`mailto:${SITE.email}`} class="hover:underline break-all">{SITE.email}</a></p>
+          <p class="flex items-start gap-3"><Clock className="w-4 h-4 mt-0.5 flex-shrink-0" /><span>Monday to Friday, 09:00 to 18:00 IST (UTC+5:30)</span></p>
+          <p class="flex items-start gap-3"><Globe className="w-4 h-4 mt-0.5 flex-shrink-0" /><span>{base}</span></p>
+          {SITE.bookingUrl && (
+            <a href={SITE.bookingUrl} class="inline-flex items-center gap-2 px-5 py-3 text-xs font-semibold uppercase tracking-widest border border-black hover:bg-stone-100"><CalendarDays className="w-4 h-4" />Book a call</a>
+          )}
+        </div>
+        <div class="p-8 bg-stone-50 border border-stone-200 space-y-3">
+          <h2 class="font-serif text-lg">What helps in a first message</h2>
+          <ul class="space-y-2 text-sm text-stone-700 font-serif list-disc pl-5">
+            <li>What the business does, and its rough size</li>
+            <li>What is not working, and since when</li>
+            <li>Who decides, and by when</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+</Base>

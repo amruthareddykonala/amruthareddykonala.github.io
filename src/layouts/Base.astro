@@ -1,0 +1,90 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../data/site';
+import { getImage } from 'astro:assets';
+import avatar from '../assets/avatar.png';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Extra JSON-LD objects for this page (Article, Book, etc.) */
+  schema?: object[];
+  ogType?: string;
+}
+
+const { title, description = SITE.description, schema = [], ogType = 'website' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const fullTitle = title === SITE.name ? `${SITE.name} | ${SITE.roleLine}` : `${title} | ${SITE.name}`;
+const ogImage = await getImage({ src: avatar, width: 512, format: 'png' });
+const ogImageUrl = new URL(ogImage.src, SITE.url).href;
+
+const sameAs = Object.values(SITE.profiles).filter(Boolean);
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': `${SITE.url}/#person`,
+  name: SITE.name,
+  alternateName: SITE.alternateName,
+  url: `${SITE.url}/`,
+  image: ogImageUrl,
+  jobTitle: 'Strategic Advisor and Fractional CMO',
+  description: SITE.description,
+  email: `mailto:${SITE.email}`,
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'National Institute of Technology, Jamshedpur' },
+  knowsAbout: ['Marketing strategy', 'Brand strategy', 'Pricing strategy', 'Go-to-market strategy', 'Marketing measurement', 'Heritage brand architecture'],
+  worksFor: { '@id': `${SITE.url}/#org` },
+  ...(sameAs.length ? { sameAs } : {}),
+};
+const org = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${SITE.url}/#org`,
+  name: `${SITE.name} Strategic Advisory`,
+  url: `${SITE.url}/`,
+  logo: ogImageUrl,
+  founder: { '@id': `${SITE.url}/#person` },
+  email: SITE.email,
+  areaServed: ['IN', 'Worldwide'],
+};
+const website = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${SITE.url}/#website`,
+  url: `${SITE.url}/`,
+  name: SITE.name,
+  publisher: { '@id': `${SITE.url}/#person` },
+};
+const allSchema = [person, org, website, ...schema];
+---
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    {allSchema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+  </head>
+  <body class="bg-[#FDFCFB] text-[#1A1A1A] font-sans selection:bg-stone-200 selection:text-[#1A1A1A] antialiased overflow-x-hidden min-h-screen flex flex-col">
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-black text-white px-3 py-2 text-xs z-50">Skip to content</a>
+    <Navbar />
+    <main id="main" class="flex-grow">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
